@@ -30,7 +30,7 @@ fi
 red() {
 if [ "$1" == "read" ];then
       color= echo -e "\033[31m$2\033[0m"
-      read -r -p "$color" myStr
+      read -p "$color"
 elif [ "$1" == "txt" ];then
       echo -e "\033[31m$2\033[0m"
 fi
@@ -48,7 +48,7 @@ exit 0
 else
 
 #下载v2ray安装脚本
-url && mv /usr/share/nginx/.user.ini /usr/share/nginx/html
+url
 exit 0
 fi
 }
