@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#此脚本需要依赖外部脚本，这是外部脚本的链接
+url() {
+wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+}
+
 #定义字体颜色
 #绿色
 green() {
@@ -21,6 +26,16 @@ elif [ "$1" == "txt" ];then
 fi
 }
 
+#红色
+red() {
+if [ "$1" == "read" ];then
+      color= echo -e "\033[31m$2\033[0m"
+      read -r -p "$color" myStr
+elif [ "$1" == "txt" ];then
+      echo -e "\033[31m$2\033[0m"
+fi
+}
+
 compack1() {
 #移动系统文件
 if [ -e /usr/share/nginx/html/.user.ini ];then
@@ -28,13 +43,12 @@ chattr -i /usr/share/nginx/html/.user.ini
 mv /usr/share/nginx/html/.user.ini /usr/share/nginx
 
 #下载v2ray安装脚本
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
-mv /usr/share/nginx/.user.ini /usr/share/nginx/html
+url && mv /usr/share/nginx/.user.ini /usr/share/nginx/html
 exit 0
 else
 
 #下载v2ray安装脚本
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+url && mv /usr/share/nginx/.user.ini /usr/share/nginx/html
 exit 0
 fi
 }
@@ -59,7 +73,7 @@ yellow txt "wwh.ink,*.wwh.ink"
 echo ""
 green read "请输入你的域名:"
 echo ""
-yellow txt "域名：$myStr"
+yellow txt "待配置的域名：$myStr"
 echo ""
 
 #创建证书文件
@@ -184,8 +198,11 @@ mkdir -p /www/server/panel/vhost/cert/$myStr
 cp $myStr.crt /www/server/panel/vhost/cert/$myStr/fullchain.pem
 cp $myStr.key /www/server/panel/vhost/cert/$myStr/privkey.pem
 
+#注意事项
+red read "注意：若要使用自用证书，请在安装证书时选择“n”，按回车键继续"
+
 #下载v2ray安装脚本
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+url
 }
 
 compack3() {
