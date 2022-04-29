@@ -5,9 +5,9 @@
 green() {
 if [ "$1" == "read" ];then
       color= echo -e "\033[32m$2\033[0m"
-      read -r -p "$color"
+      read -r -p "$color" myStr
 elif [ "$1" == "txt" ];then
-      color= echo -e "\033[32m$2\033[0m"
+      echo -e "\033[32m$2\033[0m"
 fi
 }
 
@@ -15,21 +15,15 @@ fi
 yellow() {
 if [ "$1" == "read" ];then
       color= echo -e "\033[33m$2\033[0m"
-      read -r -p "$color"
+      read -r -p "$color" myStr
 elif [ "$1" == "txt" ];then
-      color= echo -e "\033[33m$2\033[0m"
+      echo -e "\033[33m$2\033[0m"
 fi
 }
 
-#判断是否已安装
-echo ""
-if [ -e /etc/v2ray-agent/tls/*.crt ]; then
-green read "检测到已安装，是否需要重新安装?[y/n]:" InstallStatus
-if [ "$InstallStatus" == "y" ]; then
-rm -rf /etc/v2ray-agent
-
+compack1() {
 #移动系统文件
-elif [ -e /usr/share/nginx/html/.user.ini ];then
+if [ -e /usr/share/nginx/html/.user.ini ];then
 chattr -i /usr/share/nginx/html/.user.ini
 mv /usr/share/nginx/html/.user.ini /usr/share/nginx
 
@@ -43,9 +37,11 @@ else
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 exit 0
 fi
-fi
+}
 
+compack2() {
 #创建v2ray证书目录
+rm -rf /etc/v2ray-agent
 mkdir -p /etc/v2ray-agent/tls
 cd /etc/v2ray-agent/tls
 
@@ -61,10 +57,10 @@ yellow txt "wei.bio,*.wei.bio"
 echo ""
 yellow txt "wwh.ink,*.wwh.ink"
 echo ""
-green read "请输入你的域名:" ver
-myStr="$ver"
+green read "请输入你的域名:"
 echo ""
 yellow txt "域名：$myStr"
+echo ""
 
 #创建证书文件
 touch $myStr.crt
@@ -173,11 +169,11 @@ fi
 fi
 
 #删除旧证书
-if [ -d /www/server/panel/vhost/cert/*.com ];then
+if [ -d "/www/server/panel/vhost/cert/*.com" ];then
 rm -rf /www/server/panel/vhost/cert/*.com
-elif [ -d /www/server/panel/vhost/cert/*.top ];then
+elif [ -d "/www/server/panel/vhost/cert/*.top" ];then
 rm -rf /www/server/panel/vhost/cert/*.top
-elif [ -d /www/server/panel/vhost/cert/*.bio ];then
+elif [ -d "/www/server/panel/vhost/cert/*.bio" ];then
 rm -rf /www/server/panel/vhost/cert/*.bio
 else
 rm -rf /www/server/panel/vhost/cert/*.ink
@@ -185,12 +181,14 @@ fi
 
 #创建宝塔面板证书目录
 mkdir -p /www/server/panel/vhost/cert/$myStr
-cp *.crt /www/server/panel/vhost/cert/$myStr/fullchain.pem
-cp *.key /www/server/panel/vhost/cert/$myStr/privkey.pem
+cp $myStr.crt /www/server/panel/vhost/cert/$myStr/fullchain.pem
+cp $myStr.key /www/server/panel/vhost/cert/$myStr/privkey.pem
 
 #下载v2ray安装脚本
 wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+}
 
+compack3() {
 #创建伪装站点软链接
 cd /www/wwwroot
 ln -s /usr/share/nginx/html $myStr
@@ -200,3 +198,21 @@ yellow txt "$myStr"
 echo ""
 green txt "然后在站点部署SSL证书时选择“其他证书”，保存即可。"
 echo ""
+}
+
+#判断是否已安装
+echo ""
+if [ -e /etc/v2ray-agent/backup_crontab.cron ];then
+green read "检测到已安装，是否需要重新安装?[y/n]:"
+     if [ "$myStr" == "y" ]; then
+          compack2
+     else
+          compack1
+     fi
+else
+          compack2
+fi
+
+if [ -e /etc/v2ray-agent/backup_crontab.cron ];then
+     compack3
+fi
