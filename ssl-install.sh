@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #此脚本需要依赖外部脚本，这是外部脚本的链接
 url() {
@@ -58,6 +58,17 @@ fi
 white() {
 if [ "$1" == "txt" ];then
       echo -e "\033[37m$2\033[0m"
+fi
+}
+
+#创建伪装站点软链接
+link() {
+cd /www/wwwroot
+if [ -L /www/wwwroot/$myStr ];then
+    unlink $myStr
+    ln -s /usr/share/nginx/html $myStr
+else
+    ln -s /usr/share/nginx/html $myStr
 fi
 }
 
@@ -208,14 +219,25 @@ fi
 fi
 
 #删除旧证书
-if [ -d "/www/server/panel/vhost/cert/*.com" ];then
-rm -rf /www/server/panel/vhost/cert/*.com
-elif [ -d "/www/server/panel/vhost/cert/*.top" ];then
-rm -rf /www/server/panel/vhost/cert/*.top
-elif [ -d "/www/server/panel/vhost/cert/*.bio" ];then
-rm -rf /www/server/panel/vhost/cert/*.bio
+if [ -d /www/server/panel/vhost/cert/*com ];then
+rm -rf /www/server/panel/vhost/cert/*com
+elif [ -d /www/server/panel/vhost/cert/*top ];then
+rm -rf /www/server/panel/vhost/cert/*top
+elif [ -d /www/server/panel/vhost/cert/*bio ];then
+rm -rf /www/server/panel/vhost/cert/*bio
 else
-rm -rf /www/server/panel/vhost/cert/*.ink
+rm -rf /www/server/panel/vhost/cert/*ink
+fi
+
+#删除旧的nginx配置文件
+if [ -e /www/server/panel/vhost/nginx/*com.conf ];then
+rm -rf /www/server/panel/vhost/nginx/*com.conf
+elif [ -e /www/server/panel/vhost/nginx/*top.conf ];then
+rm -rf /www/server/panel/vhost/nginx/*top.conf
+elif [ -e /www/server/panel/vhost/nginx/*bio.conf ];then
+rm -rf /www/server/panel/vhost/nginx/*bio.conf
+else
+rm -rf /www/server/panel/vhost/nginx/*ink.conf
 fi
 
 #创建宝塔面板证书目录
@@ -231,21 +253,29 @@ url
 }
 
 compack3() {
-#创建伪装站点软链接
-cd /www/wwwroot
-ln -s /usr/share/nginx/html $myStr
 echo ""
 green txt "请在宝塔面板添加以下站点："
 yellow txt "$myStr"
 echo ""
 green txt "然后在站点部署SSL证书时选择“其他证书”，保存即可。"
 echo ""
+
+#创建脚本快捷方式
+cd /usr/local/sbin
+if [ -e /usr/local/sbin/ssl ];then
+     rm -rf /usr/local/sbin/ssl
+     ln -s /root/SSL-CERT/ssl-install.sh ssl
+else
+     ln -s /root/SSL-CERT/ssl-install.sh ssl
+fi
+skyblue txt "快捷方式已创建，可执行[ssl]重新打开脚本"
+echo ""
 }
 
 #判断是否已安装
 echo ""
 if [ -e /etc/v2ray-agent/backup_crontab.cron ];then
-green read "检测到已安装，是否需要重新安装?[y/n]:"
+green read "检测到证书已安装，是否需要重新安装?[y/n]:"
      if [ "$myStr" == "y" ]; then
           compack2
      else
@@ -258,3 +288,5 @@ fi
 if [ -e /etc/v2ray-agent/backup_crontab.cron ];then
      compack3
 fi
+
+link
