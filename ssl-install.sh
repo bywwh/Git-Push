@@ -2,10 +2,20 @@
 
 #此脚本需要依赖外部脚本，这是外部脚本的链接
 url() {
-wget -P /root -N --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
+wget -P /root -N -q --no-check-certificate "https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh" && chmod 700 /root/install.sh && /root/install.sh
 }
 
 #定义字体颜色
+#红色
+red() {
+if [ "$1" == "read" ];then
+      color= echo -e "\033[31m$2\033[0m"
+      read -p "$color"
+elif [ "$1" == "txt" ];then
+      echo -e "\033[31m$2\033[0m"
+fi
+}
+
 #绿色
 green() {
 if [ "$1" == "read" ];then
@@ -18,21 +28,36 @@ fi
 
 #黄色
 yellow() {
-if [ "$1" == "read" ];then
-      color= echo -e "\033[33m$2\033[0m"
-      read -r -p "$color" myStr
-elif [ "$1" == "txt" ];then
+if [ "$1" == "txt" ];then
       echo -e "\033[33m$2\033[0m"
 fi
 }
 
-#红色
-red() {
-if [ "$1" == "read" ];then
-      color= echo -e "\033[31m$2\033[0m"
-      read -p "$color"
-elif [ "$1" == "txt" ];then
-      echo -e "\033[31m$2\033[0m"
+#蓝色
+blue() {
+if [ "$1" == "txt" ];then
+      echo -e "\033[34m$2\033[0m"
+fi
+}
+
+#紫色
+purple() {
+if [ "$1" == "txt" ];then
+      echo -e "\033[35m$2\033[0m"
+fi
+}
+
+#天蓝色
+skyblue() {
+if [ "$1" == "txt" ];then
+      echo -e "\033[36m$2\033[0m"
+fi
+}
+
+#白色
+white() {
+if [ "$1" == "txt" ];then
+      echo -e "\033[37m$2\033[0m"
 fi
 }
 
@@ -199,7 +224,7 @@ cp $myStr.crt /www/server/panel/vhost/cert/$myStr/fullchain.pem
 cp $myStr.key /www/server/panel/vhost/cert/$myStr/privkey.pem
 
 #注意事项
-red read "注意：若要使用自用证书，请在安装证书时选择“n”，按回车键继续"
+red read "注意：若要使用自定义证书，请在安装证书时选择[n]，按回车键继续"
 
 #下载v2ray安装脚本
 url
