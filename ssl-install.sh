@@ -218,28 +218,6 @@ rm -rf /usr/share/nginx/html
 fi
 fi
 
-#删除旧证书
-if [ -d /www/server/panel/vhost/cert/*com ];then
-rm -rf /www/server/panel/vhost/cert/*com
-elif [ -d /www/server/panel/vhost/cert/*top ];then
-rm -rf /www/server/panel/vhost/cert/*top
-elif [ -d /www/server/panel/vhost/cert/*bio ];then
-rm -rf /www/server/panel/vhost/cert/*bio
-else
-rm -rf /www/server/panel/vhost/cert/*ink
-fi
-
-#删除旧的nginx配置文件
-if [ -e /www/server/panel/vhost/nginx/*com.conf ];then
-rm -rf /www/server/panel/vhost/nginx/*com.conf
-elif [ -e /www/server/panel/vhost/nginx/*top.conf ];then
-rm -rf /www/server/panel/vhost/nginx/*top.conf
-elif [ -e /www/server/panel/vhost/nginx/*bio.conf ];then
-rm -rf /www/server/panel/vhost/nginx/*bio.conf
-else
-rm -rf /www/server/panel/vhost/nginx/*ink.conf
-fi
-
 #创建宝塔面板证书目录
 mkdir -p /www/server/panel/vhost/cert/$myStr
 cp $myStr.crt /www/server/panel/vhost/cert/$myStr/fullchain.pem
