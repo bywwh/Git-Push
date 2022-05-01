@@ -268,8 +268,11 @@ if [ -e /usr/local/sbin/ssl ];then
 else
      ln -s /root/SSL-CERT/ssl-install.sh ssl
 fi
-skyblue txt "快捷方式已创建，可执行[ssl]重新打开脚本"
+green txt "快捷方式已创建，可执行[ssl]重新打开脚本"
 echo ""
+
+#修改nginx用户
+sed -i '/^user  /s/.*/user  '"root root;"'/' /www/server/nginx/conf/nginx.conf
 }
 
 #判断是否已安装
@@ -288,5 +291,4 @@ fi
 if [ -e /etc/v2ray-agent/backup_crontab.cron ];then
      compack3
 fi
-
 link
