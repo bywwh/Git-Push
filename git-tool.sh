@@ -55,7 +55,7 @@ green txt "设置完毕！"
 
 compack2() {
 #上传代码
-git add .
+git add --all
 green read "请输入提交记录(git commit)："
 echo
 yellow txt "$myStr"
