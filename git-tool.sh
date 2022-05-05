@@ -55,7 +55,7 @@ green txt "设置完毕！"
 
 compack2() {
 #上传代码
-git add --all
+git add -A
 green read "请输入提交记录(git commit)："
 echo
 yellow txt "$myStr"
@@ -68,10 +68,11 @@ git push origin "$myStr"
 }
 
 #询问是否已设置密钥
+echo
 green read "上传代码前需要设置密钥，你是否已设置过密钥?[y/n]:"
-     if [ "$myStr" == "y" ]; then
-          compack2
-     else
-          compack1
-          compack2
-     fi
+if [ "$myStr" == "y" ]; then
+      compack2
+else
+      compack1
+      compack2
+fi
