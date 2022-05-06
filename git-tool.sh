@@ -26,12 +26,16 @@ fi
 
 }
 
-compack1() {
-#设置用户名和邮箱
+title() {
 green txt "-------------------------"
 green txt "-     Github上传代码    -"
 green txt "-         bywwh         -"
 green txt "-------------------------"
+
+}
+
+compack1() {
+#设置用户名和邮箱
 green read "请输入邮箱(Email)："
 echo
 yellow txt "$myStr"
@@ -74,8 +78,10 @@ git push origin "$myStr"
 
 #判断是否已设置密钥
 if [ -e done.log ]; then
+      title
       compack2
 else
+      title
       compack1
       compack2
 fi
