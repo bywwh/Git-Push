@@ -32,45 +32,48 @@ green txt "-------------------------"
 green txt "-     Github上传代码    -"
 green txt "-         bywwh         -"
 green txt "-------------------------"
-green read "请输入邮箱："
+green read "请输入邮箱(Email)："
 echo
 yellow txt "$myStr"
 git config --global user.email "$myStr"
-green read "请输入用户名："
+green read "请输入用户名(Username)："
 echo
 yellow txt "$myStr"   
 git config --global user.name "$myStr"
 
 #设置密钥
-green key "请输入Github密钥："
+green key "请输入Github密钥(Personal access tokens)："
 echo
 yellow txt "$key"
-green repo "请输入仓库名："
+green repo "请输入仓库名(Project)："
 echo
 yellow txt "$repo"
 git remote set-url origin https://"$key"@github.com/"$myStr"/"$repo"
 green txt "设置完毕！"
+echo
+touch done.log
+cat> done.log <<END
+Key setting succeeded!
+END
 
 }
 
 compack2() {
 #上传代码
 git add -A
-green read "请输入提交记录(git commit)："
+green read "请输入提交记录(Git commit)："
 echo
 yellow txt "$myStr"
 git commit -m "$myStr"
-green read "请输入仓库分支(branch)："
+green read "请输入仓库分支(Branch)："
 echo
 yellow txt "$myStr"
 git push origin "$myStr"
 
 }
 
-#询问是否已设置密钥
-echo
-green read "上传代码前需要设置密钥，你是否已设置过密钥?[y/n]:"
-if [ "$myStr" == "y" ]; then
+#判断是否已设置密钥
+if [ -e done.log ]; then
       compack2
 else
       compack1
